@@ -55,8 +55,7 @@ class MessageLibController: UIViewController {
         topBarHeightConstraint.constant = MessageHelper.isDeviceHaveBrow() ? 88 : 64
         messageCollectionView.delegate = self
         messageCollectionView.dataSource = self
-       
-        messageCollectionView.register(MessageCell.self, forCellWithReuseIdentifier: "MessageCell")
+     //   messageCollectionView.register(MessageCell.self, forCellWithReuseIdentifier: "MessageCell")
     }
     
     private func subscribeToNotifications() {
@@ -93,39 +92,10 @@ extension MessageLibController: UICollectionViewDelegateFlowLayout, UICollection
         let data = self.messagesArray[indexPath.item]
 
         cell.fillCell(message: data)
-        
-        if let textString = self.messagesArray[indexPath.row].text {
-            let font = UIFont.systemFont(ofSize: 17)
-            let size = CGSize(width: view.bounds.width - 60, height: 1000)
-            let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-            let attributes = [NSAttributedString.Key.font : font]
-            let estimatedFrame = NSString(string: textString).boundingRect(with: size,
-                                                                            options: options,
-                                                                            attributes: attributes,
-                                                                            context: nil)
-            cell.messageLabel.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 60, height: estimatedFrame.height)
-            cell.messageContentView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 60, height: estimatedFrame.height + 10)
-        }
-              
+ 
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let textString = self.messagesArray[indexPath.row].text
-        let font = UIFont.systemFont(ofSize: 17)
-        let size = CGSize(width: view.bounds.width - 60, height: 1000)
-        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        let attributes = [NSAttributedString.Key.font : font]
-        let estimatedFrame = NSString(string: textString!).boundingRect(with: size, options: options, attributes: attributes, context: nil)
-
-        return CGSize(width: view.frame.width, height: estimatedFrame.height)
-    }
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//
-//        return UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
-//     }
     
     func messageCollectionView(_ messages: [Message]) {
         self.messagesArray = messages
