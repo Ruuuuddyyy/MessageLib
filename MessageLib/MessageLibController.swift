@@ -55,6 +55,9 @@ class MessageLibController: UIViewController {
         topBarHeightConstraint.constant = MessageHelper.isDeviceHaveBrow() ? 88 : 64
         messageCollectionView.delegate = self
         messageCollectionView.dataSource = self
+        let messageLibLayout = MessageLibLayout()
+        messageLibLayout.delegate = self
+        messageCollectionView.collectionViewLayout = messageLibLayout
      //   messageCollectionView.register(MessageCell.self, forCellWithReuseIdentifier: "MessageCell")
     }
     
@@ -82,7 +85,24 @@ class MessageLibController: UIViewController {
     
 }
 
-extension MessageLibController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+extension MessageLibController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, MessageLibLayoutDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, heightForMesssageTextAtIndexPath indexPath: IndexPath) -> CGSize {
+        if let textString = self.messagesArray[indexPath.row].text {
+            let font = UIFont.systemFont(ofSize: 17)
+            let size = CGSize(width: view.bounds.width - 60, height: 1000)
+            let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+            let attributes = [NSAttributedString.Key.font : font]
+            let estimatedFrame = NSString(string: textString).boundingRect(with: size,
+                                                                            options: options,
+                                                                            attributes: attributes,
+                                                                            context: nil)
+            
+            return estimatedFrame.size
+        }
+        return CGSize(width: 100, height: 50)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messagesArray.count
     }

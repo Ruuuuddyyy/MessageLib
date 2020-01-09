@@ -9,15 +9,14 @@
 import UIKit
 
 protocol MessageLibLayoutDelegate: AnyObject {
-    func collectionView( _ collectionView: UICollectionView, heightForPhotoAtIndexPath indexPath: IndexPath) -> CGFloat
-    func collectionView( _ collectionView: UICollectionView, heightForMesssageTextAtIndexPath indexPath: IndexPath) -> CGFloat
+   // func collectionView( _ collectionView: UICollectionView, heightForPhotoAtIndexPath indexPath: IndexPath) -> CGFloat
+    func collectionView( _ collectionView: UICollectionView, heightForMesssageTextAtIndexPath indexPath: IndexPath) -> CGSize
 }
 
 class MessageLibLayout: UICollectionViewLayout {
     
     weak var delegate: MessageLibLayoutDelegate?
 
-    private let numberOfColumns = 2
     private let cellPadding: CGFloat = 5
 
     private var cache: [UICollectionViewLayoutAttributes] = []
@@ -41,23 +40,29 @@ class MessageLibLayout: UICollectionViewLayout {
           return
         }
 
-        let columnWidth = contentWidth - 50
         var xOffset: [CGFloat] = []
-        for column in 0..<numberOfColumns {
-            xOffset.append(CGFloat(column) * columnWidth)
-        }
-        var column = 0
-        var yOffset: [CGFloat] = .init(repeating: 0, count: numberOfColumns)
+        var yOffset: [CGFloat] = []
         
         for item in 0..<collectionView.numberOfItems(inSection: 0) {
             let indexPath = IndexPath(item: item, section: 0)
           
+            let cell = collectionView.cellForItem(at: indexPath)
+            let photoHeight = delegate?.collectionView( collectionView, heightForMesssageTextAtIndexPath: indexPath)
+            
+            if indexPath.row == 0 {
+                xOffset.append(0)
+                yOffset.append(0)
+            } else {
+                xOffset.append(0)
+                yOffset.append(cache[indexPath.row - 1].frame.maxY)
+            }
+            
           //  let photoHeight = 0//= delegate?.collectionView( collectionView, heightForPhotoAtIndexPath: indexPath) ?? 180
             let height = cellPadding * 2 // + photoHeight
-            let frame = CGRect(x: xOffset[column],
-                               y: yOffset[column],
-                               width: columnWidth,
-                               height: height)
+            let frame = CGRect(x: xOffset[indexPath.row],
+                               y: yOffset[indexPath.row],
+                               width: photoHeight!.width,
+                               height: photoHeight!.height)
             let insetFrame = frame.insetBy(dx: cellPadding, dy: cellPadding)
           
             // 5
@@ -68,9 +73,7 @@ class MessageLibLayout: UICollectionViewLayout {
           
             // 6
             contentHeight = max(contentHeight, frame.maxY)
-            yOffset[column] = yOffset[column] + height
-        
-            column = column < (numberOfColumns - 1) ? (column + 1) : 0
+          //  yOffset[indexPath.row] = yOffset[indexPath.row] + height
         }
     }
     
