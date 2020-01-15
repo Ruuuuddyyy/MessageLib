@@ -66,7 +66,7 @@ class MessageLibLayout: UICollectionViewLayout {
           
             // 5
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-            attributes.frame = CGRect(x: insetFrame.origin.x, y: insetFrame.origin.y, width: insetFrame.width, height: 100)
+            attributes.frame = CGRect(x: insetFrame.origin.x, y: insetFrame.origin.y, width: insetFrame.width, height: insetFrame.height)
             
             cache.append(attributes)
           

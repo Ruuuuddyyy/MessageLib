@@ -33,6 +33,14 @@ class MessageLibController: UIViewController {
         messagesArray.append(message2)
         messagesArray.append(message3)
         messagesArray.append(message4)
+        messagesArray.append(message4)
+        messagesArray.append(message4)
+        messagesArray.append(message4)
+        messagesArray.append(message4)
+        messagesArray.append(message4)
+        messagesArray.append(message4)
+        messagesArray.append(message4)
+        messagesArray.append(message4)
 
         installViews()
     }
@@ -90,27 +98,12 @@ extension MessageLibController: UICollectionViewDelegateFlowLayout, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, heightForMesssageTextAtIndexPath indexPath: IndexPath) -> CGSize {
-//        if let textString = self.messagesArray[indexPath.row].text {
-//            let font = UIFont.systemFont(ofSize: 17)
-//            let size = CGSize(width: view.bounds.width - 60, height: 1000)
-//            let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-//            let attributes = [NSAttributedString.Key.font : font]
-//            let estimatedFrame = NSString(string: textString).boundingRect(with: size,
-//                                                                            options: options,
-//                                                                            attributes: attributes,
-//                                                                            context: nil)
-//
-//            return estimatedFrame.size
-//        }
-        
         let message = self.messagesArray[indexPath.row].text
         let size = CGSize(width: view.bounds.width - 60, height: 6000)
         let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        let estimatedFrame = NSString(string: message!).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)], context: nil)
+        let estimatedFrame = NSString(string: message!).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .regular)], context: nil)
         
-        return CGSize(width: estimatedFrame.width + 50, height: estimatedFrame.height)
-
-     //   return CGSize(width: 100, height: 50)
+        return CGSize(width: estimatedFrame.width + 30, height: estimatedFrame.height + 30)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

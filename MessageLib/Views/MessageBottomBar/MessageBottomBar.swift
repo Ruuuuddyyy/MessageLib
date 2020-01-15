@@ -41,6 +41,10 @@ class MessageBottomBar: UIView {
         self.textView.delegate = self
     }
     
+    @IBAction func sendDidTapped(_ sender: Any) {
+        
+    }
+    
 }
 
 extension MessageBottomBar: UITextViewDelegate {

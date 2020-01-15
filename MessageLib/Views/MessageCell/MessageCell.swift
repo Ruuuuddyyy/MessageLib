@@ -18,7 +18,7 @@ class MessageCell: UICollectionViewCell {
 //    @IBOutlet weak var rightDate: UILabel!
     
     var incomeColorBubble =  UIColor(red :0.24, green: 0.57, blue: 0.84, alpha: 1)
-    var outComeColorBubble = UIColor.white
+    var outComeColorBubble = UIColor(red :0.24, green: 0.57, blue: 0.84, alpha: 0.1)
     
     var incomeColorMessageText = UIColor.white
     var outcomeColorMessageText = UIColor.black
@@ -49,11 +49,6 @@ class MessageCell: UICollectionViewCell {
     
     private func installViews() {
         self.messageContentView.layer.cornerRadius = 17
-        self.messageContentView.layer.shadowColor = UIColor.black.withAlphaComponent(0.5).cgColor
-        self.messageContentView.layer.shadowRadius = 7
-        self.messageContentView.layer.shadowOffset = CGSize(width: -0.1, height: 0.1)
-        self.messageContentView.layer.shadowOpacity = 0.1
-
         self.messageContentView.backgroundColor = message.chatRole == .outgoing ? outComeColorBubble : incomeColorBubble
         self.messageLabel.textColor = message.chatRole == .outgoing ? outcomeColorMessageText : incomeColorMessageText
     }
