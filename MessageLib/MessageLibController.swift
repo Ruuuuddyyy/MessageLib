@@ -23,12 +23,11 @@ class MessageLibController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        let message1 = Message(images: nil, text: "Привет, как у тебя дела? я кста прошел dark souls)))", date: Date(), chatRole: .mainUser)
-        let message3 = Message(images: nil, text: "Привет, как у тебя дела? я кста прошел dark souls)))", date: Date(), chatRole: .mainUser)
+        let message1 = Message(images: nil, text: "Привет, как у тебя дела?", date: Date(), chatRole: .outgoing)
+        let message2 = Message(images: nil, text: "Чего молчишь?", date: Date(), chatRole: .outgoing)
 
-        let message2 = Message(images: nil, text: "Нормас кста)))", date: Date(), chatRole: .minorUser)
-        let message4 = Message(images: nil, text: "Привет, как у тебя дела? я кста прошел dark souls)))", date: Date(), chatRole: .mainUser)
+        let message3 = Message(images: nil, text: "Нормас кста)))", date: Date(), chatRole: .incoming)
+        let message4 = Message(images: nil, text: "Понимейшен", date: Date(), chatRole: .outgoing)
 
         messagesArray.append(message1)
         messagesArray.append(message2)
@@ -58,7 +57,6 @@ class MessageLibController: UIViewController {
         let messageLibLayout = MessageLibLayout()
         messageLibLayout.delegate = self
         messageCollectionView.collectionViewLayout = messageLibLayout
-     //   messageCollectionView.register(MessageCell.self, forCellWithReuseIdentifier: "MessageCell")
     }
     
     private func subscribeToNotifications() {
@@ -87,20 +85,32 @@ class MessageLibController: UIViewController {
 
 extension MessageLibController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, MessageLibLayoutDelegate {
     
+    func collectionView(_ collectionView: UICollectionView, incomingOrOutgoingMessageAtIndexPath indexPath: IndexPath) -> MessageType {
+        return messagesArray[indexPath.row].chatRole
+    }
+    
     func collectionView(_ collectionView: UICollectionView, heightForMesssageTextAtIndexPath indexPath: IndexPath) -> CGSize {
-        if let textString = self.messagesArray[indexPath.row].text {
-            let font = UIFont.systemFont(ofSize: 17)
-            let size = CGSize(width: view.bounds.width - 60, height: 1000)
-            let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-            let attributes = [NSAttributedString.Key.font : font]
-            let estimatedFrame = NSString(string: textString).boundingRect(with: size,
-                                                                            options: options,
-                                                                            attributes: attributes,
-                                                                            context: nil)
-            
-            return estimatedFrame.size
-        }
-        return CGSize(width: 100, height: 50)
+//        if let textString = self.messagesArray[indexPath.row].text {
+//            let font = UIFont.systemFont(ofSize: 17)
+//            let size = CGSize(width: view.bounds.width - 60, height: 1000)
+//            let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+//            let attributes = [NSAttributedString.Key.font : font]
+//            let estimatedFrame = NSString(string: textString).boundingRect(with: size,
+//                                                                            options: options,
+//                                                                            attributes: attributes,
+//                                                                            context: nil)
+//
+//            return estimatedFrame.size
+//        }
+        
+        let message = self.messagesArray[indexPath.row].text
+        let size = CGSize(width: view.bounds.width - 60, height: 6000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        let estimatedFrame = NSString(string: message!).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)], context: nil)
+        
+        return CGSize(width: estimatedFrame.width + 50, height: estimatedFrame.height)
+
+     //   return CGSize(width: 100, height: 50)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

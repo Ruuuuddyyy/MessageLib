@@ -8,9 +8,9 @@
 
 import UIKit
 
-enum ChatRole {
-    case mainUser
-    case minorUser
+enum MessageType {
+    case incoming
+    case outgoing
 }
 
 struct Message {
@@ -18,6 +18,6 @@ struct Message {
     var images: [UIImage]?
     var text: String?
     var date: Date?
-    var chatRole = ChatRole.mainUser
+    var chatRole = MessageType.outgoing
 
 }

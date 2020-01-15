@@ -10,19 +10,17 @@ import UIKit
 
 protocol MessageLibLayoutDelegate: AnyObject {
    // func collectionView( _ collectionView: UICollectionView, heightForPhotoAtIndexPath indexPath: IndexPath) -> CGFloat
+    func collectionView( _ collectionView: UICollectionView, incomingOrOutgoingMessageAtIndexPath indexPath: IndexPath) -> MessageType
     func collectionView( _ collectionView: UICollectionView, heightForMesssageTextAtIndexPath indexPath: IndexPath) -> CGSize
 }
 
 class MessageLibLayout: UICollectionViewLayout {
     
     weak var delegate: MessageLibLayoutDelegate?
-
     private let cellPadding: CGFloat = 5
-
     private var cache: [UICollectionViewLayoutAttributes] = []
-
     private var contentHeight: CGFloat = 0
-
+    
     private var contentWidth: CGFloat {
         guard let collectionView = collectionView else {
             return 0
@@ -46,23 +44,24 @@ class MessageLibLayout: UICollectionViewLayout {
         for item in 0..<collectionView.numberOfItems(inSection: 0) {
             let indexPath = IndexPath(item: item, section: 0)
           
-            let cell = collectionView.cellForItem(at: indexPath)
-            let photoHeight = delegate?.collectionView( collectionView, heightForMesssageTextAtIndexPath: indexPath)
+           // let cell = collectionView.cellForItem(at: indexPath)
+            let sizeCell = delegate?.collectionView(collectionView, heightForMesssageTextAtIndexPath: indexPath)
+        
+            let xOffsetMessageType = (delegate?.collectionView(collectionView, incomingOrOutgoingMessageAtIndexPath: indexPath))! == .incoming ? 0 : contentWidth - sizeCell!.width
             
             if indexPath.row == 0 {
-                xOffset.append(0)
                 yOffset.append(0)
             } else {
-                xOffset.append(0)
                 yOffset.append(cache[indexPath.row - 1].frame.maxY)
             }
-            
+            xOffset.append(xOffsetMessageType)
+
           //  let photoHeight = 0//= delegate?.collectionView( collectionView, heightForPhotoAtIndexPath: indexPath) ?? 180
-            let height = cellPadding * 2 // + photoHeight
+      //      let height = cellPadding * 2 // + photoHeight
             let frame = CGRect(x: xOffset[indexPath.row],
                                y: yOffset[indexPath.row],
-                               width: photoHeight!.width,
-                               height: photoHeight!.height)
+                               width: sizeCell!.width,
+                               height: sizeCell!.height)
             let insetFrame = frame.insetBy(dx: cellPadding, dy: cellPadding)
           
             // 5
