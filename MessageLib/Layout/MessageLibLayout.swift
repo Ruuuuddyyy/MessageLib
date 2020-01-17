@@ -69,17 +69,36 @@ class MessageLibLayout: UICollectionViewLayout {
             attributes.frame = CGRect(x: insetFrame.origin.x, y: insetFrame.origin.y, width: insetFrame.width, height: insetFrame.height)
             
             cache.append(attributes)
-          
             // 6
             contentHeight = max(contentHeight, frame.maxY)
           //  yOffset[indexPath.row] = yOffset[indexPath.row] + height
         }
     }
+ 
+    func insertToCache(indexPath: IndexPath) {
+        guard let collectionView = collectionView else { return }
+        let sizeCell = delegate?.collectionView(collectionView, heightForMesssageTextAtIndexPath: indexPath)
+          
+        let xOffsetMessageType = (delegate?.collectionView(collectionView, incomingOrOutgoingMessageAtIndexPath: indexPath))! == .incoming ? 0 : contentWidth - sizeCell!.width
+
+        let yOffset = cache.count == 0 ? 0 : (cache[indexPath.row - 1].frame.maxY)
+        
+        let frame = CGRect(x: xOffsetMessageType,
+                           y: yOffset,
+                           width: sizeCell!.width,
+                           height: sizeCell!.height)
+        let insetFrame = frame.insetBy(dx: cellPadding, dy: cellPadding)
+        
+        let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
+        attributes.frame = CGRect(x: insetFrame.origin.x, y: insetFrame.origin.y, width: insetFrame.width, height: insetFrame.height)
+          
+        cache.append(attributes)
+
+        contentHeight = max(contentHeight, frame.maxY)
+    }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var visibleLayoutAttributes: [UICollectionViewLayoutAttributes] = []
-      
-        // Loop through the cache and look for items in the rect
         for attributes in cache {
             if attributes.frame.intersects(rect) {
                 visibleLayoutAttributes.append(attributes)

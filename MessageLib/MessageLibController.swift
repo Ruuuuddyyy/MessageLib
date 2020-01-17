@@ -22,7 +22,7 @@ class MessageLibController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         let message1 = Message(images: nil, text: "Привет, как у тебя дела?", date: Date(), chatRole: .outgoing)
         let message2 = Message(images: nil, text: "Чего молчишь?", date: Date(), chatRole: .outgoing)
 
@@ -58,13 +58,14 @@ class MessageLibController: UIViewController {
     }
 
     private func installViews() {
-        topBarTopConstraint.constant = MessageHelper.isDeviceHaveBrow() ? -24 : 0
-        topBarHeightConstraint.constant = MessageHelper.isDeviceHaveBrow() ? 88 : 64
+//        topBarTopConstraint.constant = MessageHelper.isDeviceHaveBrow() ? -24 : 0
+//        topBarHeightConstraint.constant = MessageHelper.isDeviceHaveBrow() ? 88 : 64
         messageCollectionView.delegate = self
         messageCollectionView.dataSource = self
         let messageLibLayout = MessageLibLayout()
         messageLibLayout.delegate = self
         messageCollectionView.collectionViewLayout = messageLibLayout
+        messageSend()
     }
     
     private func subscribeToNotifications() {
@@ -118,10 +119,22 @@ extension MessageLibController: UICollectionViewDelegateFlowLayout, UICollection
  
         return cell
     }
-
     
     func messageCollectionView(_ messages: [Message]) {
         self.messagesArray = messages
     }
     
+}
+
+extension MessageLibController {
+    private func messageSend() {
+        self.messageBottomBar.messageDidSend = { [weak self] message in
+            self?.messagesArray.append(message)
+            let row = (self?.messagesArray.count ?? 0) - 1
+            let indexPath = IndexPath(row: row, section: 0)
+            (self?.messageCollectionView.collectionViewLayout as! MessageLibLayout).insertToCache(indexPath: indexPath)
+            self?.messageCollectionView.insertItems(at: [indexPath])
+            self?.messageCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: true)
+        }
+    }
 }

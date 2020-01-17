@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class MessageBottomBar: UIView {
     
     @IBOutlet var contentView: UIView!
@@ -18,6 +19,7 @@ class MessageBottomBar: UIView {
     public var placeholder = "Write a message..."
     public var placeholderColor = UIColor.lightGray
     public var textMessageColor = UIColor.black
+    var messageDidSend: ((Message)->())?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,8 +43,13 @@ class MessageBottomBar: UIView {
         self.textView.delegate = self
     }
     
-    @IBAction func sendDidTapped(_ sender: Any) {
+    @IBAction func sendDidTapped(_ sender: UIButton) {
         
+        var message = Message()
+        message.text = self.textView.text
+        self.textView.text = ""
+        
+        messageDidSend?(message)
     }
     
 }
