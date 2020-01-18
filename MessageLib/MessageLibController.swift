@@ -100,7 +100,7 @@ extension MessageLibController: UICollectionViewDelegateFlowLayout, UICollection
     
     func collectionView(_ collectionView: UICollectionView, heightForMesssageTextAtIndexPath indexPath: IndexPath) -> CGSize {
         let message = self.messagesArray[indexPath.row].text
-        let size = CGSize(width: view.bounds.width - 60, height: 6000)
+        let size = CGSize(width: view.bounds.width - 60, height: 8000)
         let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
         let estimatedFrame = NSString(string: message!).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .regular)], context: nil)
         

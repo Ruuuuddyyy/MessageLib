@@ -11,11 +11,25 @@ import UIKit
 
 class MessageBottomBar: UIView {
     
-    @IBOutlet var contentView: UIView!
-    @IBOutlet weak var leftButton: UIButton!
-    @IBOutlet weak var rightButton: UIButton!
-    @IBOutlet weak var textView: UITextView!
+    lazy var leftButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "cameraIcon"), for: .normal)
+        return button
+    }()
     
+    lazy var rightButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "sendButtonIcon"), for: .normal)
+        button.addTarget(self, action: #selector(sendDidTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var textView: UITextView = {
+        let tv = UITextView()
+        tv.backgroundColor = UIColor.black.withAlphaComponent(0.07)
+        return tv
+    }()
+
     public var placeholder = "Write a message..."
     public var placeholderColor = UIColor.lightGray
     public var textMessageColor = UIColor.black
@@ -34,24 +48,54 @@ class MessageBottomBar: UIView {
     }
        
     private func installViews() {
-        Bundle.main.loadNibNamed("MessageBottomBar", owner: self, options: nil)
-        addSubview(contentView)
-        contentView.frame = self.bounds
         self.textView.text = placeholder
         self.textView.textColor = placeholderColor
         self.textView.layer.cornerRadius = 14
         self.textView.delegate = self
+        self.translatesAutoresizingMaskIntoConstraints = false
+
+        instalLeftButtonConstraints()
+        instalRightButtonConstraints()
+        instaltextViewButtonConstraints()
     }
     
-    @IBAction func sendDidTapped(_ sender: UIButton) {
+    private func instalLeftButtonConstraints() {
+        self.addSubview(leftButton)
         
+        leftButton.translatesAutoresizingMaskIntoConstraints = false
+        leftButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        leftButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true
+        leftButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
+        leftButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+    }
+    
+    private func instalRightButtonConstraints() {
+        self.addSubview(rightButton)
+           
+        rightButton.translatesAutoresizingMaskIntoConstraints = false
+        rightButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        rightButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
+        rightButton.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        rightButton.widthAnchor.constraint(equalToConstant: 26).isActive = true
+    }
+    
+    private func instaltextViewButtonConstraints() {
+        self.addSubview(textView)
+              
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.leadingAnchor.constraint(equalTo: leftButton.trailingAnchor, constant: 10).isActive = true
+        textView.trailingAnchor.constraint(equalTo: rightButton.leadingAnchor, constant: -10).isActive = true
+        textView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5).isActive = true
+        textView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5).isActive = true
+    }
+    
+    @objc func sendDidTapped(_ sender: UIButton) {
+        sender.tapAnimation()
         var message = Message()
         message.text = self.textView.text
         self.textView.text = ""
-        
         messageDidSend?(message)
     }
-    
 }
 
 extension MessageBottomBar: UITextViewDelegate {
