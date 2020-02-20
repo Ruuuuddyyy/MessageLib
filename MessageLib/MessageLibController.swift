@@ -14,9 +14,10 @@ class MessageLibController: UIViewController {
     @IBOutlet weak var messageTopBar: MessageTopBar!
     @IBOutlet weak var messageBottomBar: MessageBottomBar!
     @IBOutlet weak var topBarHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var messageTopBarSeparator: UIView!
     @IBOutlet weak var messageBottomBarBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var topBarTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var messageViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var messageCollectionViewBottom: NSLayoutConstraint!
     
     private var messagesArray = [Message]()
 
@@ -66,6 +67,8 @@ class MessageLibController: UIViewController {
         messageLibLayout.delegate = self
         messageCollectionView.collectionViewLayout = messageLibLayout
         messageSend()
+        
+        messageBottomBar.textView.delegate = self
     }
     
     private func subscribeToNotifications() {
@@ -126,7 +129,23 @@ extension MessageLibController: UICollectionViewDelegateFlowLayout, UICollection
     
 }
 
-extension MessageLibController {
+extension MessageLibController: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let height = textView.contentSize.height < 42 ? 42 : textView.contentSize.height
+        var point = self.messageCollectionView.contentOffset
+        point.y = height - 42
+
+        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut, animations: {
+            self.messageCollectionView.contentOffset = point
+            self.messageCollectionViewBottom.constant = height - 42
+            self.messageViewHeight.constant = height
+            self.messageCollectionView.layoutIfNeeded()
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+        
+    }
+    
     private func messageSend() {
         self.messageBottomBar.messageDidSend = { [weak self] message in
             self?.messagesArray.append(message)

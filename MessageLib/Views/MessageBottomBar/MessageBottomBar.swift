@@ -24,9 +24,15 @@ class MessageBottomBar: UIView {
         return button
     }()
     
+    lazy var backTextView: UIView = {
+        let v = UIView()
+        v.backgroundColor = UIColor.black.withAlphaComponent(0.07)
+        return v
+    }()
+    
     lazy var textView: UITextView = {
         let tv = UITextView()
-        tv.backgroundColor = UIColor.black.withAlphaComponent(0.07)
+        tv.backgroundColor = .clear
         return tv
     }()
 
@@ -50,13 +56,13 @@ class MessageBottomBar: UIView {
     private func installViews() {
         self.textView.text = placeholder
         self.textView.textColor = placeholderColor
-        self.textView.layer.cornerRadius = 14
+        self.backTextView.layer.cornerRadius = 14
         self.textView.delegate = self
         self.translatesAutoresizingMaskIntoConstraints = false
 
         instalLeftButtonConstraints()
-        instalRightButtonConstraints()
-        instaltextViewButtonConstraints()
+        installRightButtonConstraints()
+        installtextViewConstraints()
     }
     
     private func instalLeftButtonConstraints() {
@@ -69,7 +75,7 @@ class MessageBottomBar: UIView {
         leftButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
-    private func instalRightButtonConstraints() {
+    private func installRightButtonConstraints() {
         self.addSubview(rightButton)
            
         rightButton.translatesAutoresizingMaskIntoConstraints = false
@@ -79,14 +85,21 @@ class MessageBottomBar: UIView {
         rightButton.widthAnchor.constraint(equalToConstant: 26).isActive = true
     }
     
-    private func instaltextViewButtonConstraints() {
-        self.addSubview(textView)
-              
+    private func installtextViewConstraints() {
+        self.addSubview(backTextView)
+        backTextView.addSubview(textView)
+        
+        backTextView.translatesAutoresizingMaskIntoConstraints = false
+        backTextView.leadingAnchor.constraint(equalTo: leftButton.trailingAnchor, constant: 10).isActive = true
+        backTextView.trailingAnchor.constraint(equalTo: rightButton.leadingAnchor, constant: -10).isActive = true
+        backTextView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5).isActive = true
+        backTextView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5).isActive = true
+        
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.leadingAnchor.constraint(equalTo: leftButton.trailingAnchor, constant: 10).isActive = true
-        textView.trailingAnchor.constraint(equalTo: rightButton.leadingAnchor, constant: -10).isActive = true
-        textView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5).isActive = true
-        textView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5).isActive = true
+        textView.leadingAnchor.constraint(equalTo: backTextView.leadingAnchor, constant: 5).isActive = true
+        textView.trailingAnchor.constraint(equalTo: backTextView.trailingAnchor, constant: -5).isActive = true
+        textView.topAnchor.constraint(equalTo: self.backTextView.topAnchor, constant: 5).isActive = true
+        textView.bottomAnchor.constraint(equalTo: self.backTextView.bottomAnchor, constant: -5).isActive = true
     }
     
     @objc func sendDidTapped(_ sender: UIButton) {
@@ -99,6 +112,10 @@ class MessageBottomBar: UIView {
 }
 
 extension MessageBottomBar: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+
+    }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == placeholderColor {

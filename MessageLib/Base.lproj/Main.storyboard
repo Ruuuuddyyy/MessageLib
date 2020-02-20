@@ -31,9 +31,9 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GhX-Iz-t9v" customClass="MessageBottomBar" customModule="MessageLib" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="627" width="375" height="40"/>
+                                <rect key="frame" x="0.0" y="625" width="375" height="42"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="X5s-Sl-D4D"/>
+                                    <constraint firstAttribute="height" constant="42" id="X5s-Sl-D4D"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="uVP-aD-hEq" customClass="MessageCollectionView" customModule="MessageLib" customModuleProvider="target">
@@ -105,7 +105,9 @@
                         <outlet property="messageBottomBar" destination="GhX-Iz-t9v" id="MfB-AB-nfy"/>
                         <outlet property="messageBottomBarBottomConstraint" destination="7qz-a7-ERc" id="Ogp-pA-cqL"/>
                         <outlet property="messageCollectionView" destination="uVP-aD-hEq" id="TcM-ht-ydC"/>
+                        <outlet property="messageCollectionViewBottom" destination="fiM-hW-TQv" id="7Wb-nF-Pde"/>
                         <outlet property="messageTopBar" destination="s3j-p3-ekv" id="yZQ-1y-p4j"/>
+                        <outlet property="messageViewHeight" destination="X5s-Sl-D4D" id="Omq-Sy-tYc"/>
                         <outlet property="topBarHeightConstraint" destination="IgH-Ir-UqY" id="FBo-S8-n09"/>
                         <outlet property="topBarTopConstraint" destination="SYv-Pq-GGZ" id="lfY-L7-FZ7"/>
                     </connections>
