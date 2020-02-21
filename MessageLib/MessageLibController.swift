@@ -20,6 +20,7 @@ class MessageLibController: UIViewController {
     @IBOutlet weak var messageCollectionViewBottom: NSLayoutConstraint!
     
     private var messagesArray = [Message]()
+    private var keyboardHeight: CGFloat = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,11 +84,22 @@ class MessageLibController: UIViewController {
     
     @objc func keyboardWillShow(_ notification: Foundation.Notification) {
         let keyboardSize = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.size
-        messageBottomBarBottomConstraint.constant = keyboardSize.height
+        self.keyboardHeight = keyboardSize.height
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.4, options: .curveEaseIn, animations: { [weak self] in
+            self?.messageBottomBarBottomConstraint.constant = keyboardSize.height - 30
+            self?.messageCollectionViewBottom.constant = keyboardSize.height - 30
+            self?.view.layoutIfNeeded()
+        }, completion: nil)
     }
     
     @objc func keyboardWillHide(_ notification: Foundation.Notification) {
-        messageBottomBarBottomConstraint.constant = 0
+        self.keyboardHeight = 0
+        UIView.animate(withDuration: 0.5, delay: 0.2, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.2, options: .curveLinear, animations: { [weak self] in
+            self?.messageBottomBarBottomConstraint.constant = 0
+            self?.messageCollectionViewBottom.constant = 0
+            self?.view.layoutIfNeeded()
+        }, completion: nil)
+        
         if self.messageBottomBar.textView.text.isEmpty {
 //            self.messageBottomBar.placeholderLabel.isHidden = false
         }
@@ -130,18 +142,16 @@ extension MessageLibController: UICollectionViewDelegateFlowLayout, UICollection
 }
 
 extension MessageLibController: UITextViewDelegate {
-    
     func textViewDidChange(_ textView: UITextView) {
-        let height = textView.contentSize.height < 42 ? 42 : textView.contentSize.height
+        let height = textView.contentSize.height < 44 ? 44 : textView.contentSize.height < 230 ? textView.contentSize.height + 5 : 230
         var point = self.messageCollectionView.contentOffset
-        point.y = height - 42
+        point.y = height + keyboardHeight
 
-        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut, animations: {
-            self.messageCollectionView.contentOffset = point
-            self.messageCollectionViewBottom.constant = height - 42
-            self.messageViewHeight.constant = height
-            self.messageCollectionView.layoutIfNeeded()
-            self.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut, animations: { [weak self] in
+            self?.messageCollectionView.contentOffset = point
+            self?.messageCollectionViewBottom.constant = height - 64 + (self?.keyboardHeight ?? 0)
+            self?.messageViewHeight.constant = height //<= 44 ? 44 : height + 5
+            //self.view.layoutIfNeeded()
         }, completion: nil)
         
     }

@@ -31,9 +31,9 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GhX-Iz-t9v" customClass="MessageBottomBar" customModule="MessageLib" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="625" width="375" height="42"/>
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="42" id="X5s-Sl-D4D"/>
+                                    <constraint firstAttribute="height" constant="44" id="X5s-Sl-D4D"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="uVP-aD-hEq" customClass="MessageCollectionView" customModule="MessageLib" customModuleProvider="target">
