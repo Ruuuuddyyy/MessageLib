@@ -8,14 +8,14 @@
 
 import UIKit
 
-class MessagePhotoCell: UICollectionViewCell {
+final class MessagePhotoCell: UICollectionViewCell {
     
     
     func fillCell() {
           
     }
       
-    func installViews() {
+    private func setupViews() {
           
     }
     

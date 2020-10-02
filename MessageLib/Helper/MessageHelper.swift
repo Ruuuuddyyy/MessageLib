@@ -19,13 +19,13 @@ enum Iphones {
 
 class MessageHelper {
     
-    static func isDeviceHaveBrow() -> Bool {
+    static func isDeviceHaveBrow() -> CGFloat {
         switch checkIphones() {
-        case .iPhoneX: return true
-        case .iPhoneXMax: return true
-        case .iPhoneXR: return true
+        case .iPhoneX: return 24
+        case .iPhoneXMax: return 24
+        case .iPhoneXR: return 24
         default:
-            return false
+            return 0
         }
     }
       

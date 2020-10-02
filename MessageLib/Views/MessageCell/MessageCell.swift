@@ -8,10 +8,19 @@
 
 import UIKit
 
-class MessageCell: UICollectionViewCell {
+final class MessageCell: UICollectionViewCell {
     
-    @IBOutlet var messageContentView: UIView!
-    @IBOutlet weak var messageLabel: UILabel!
+    private lazy var messageContentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    private lazy var messageLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 17)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 //    @IBOutlet weak var messageView: UIView!
 //    @IBOutlet weak var dateView: UIView!
 //    @IBOutlet weak var leftDate: UILabel!
@@ -27,13 +36,22 @@ class MessageCell: UICollectionViewCell {
     
     let dateFormatter = DateFormatter()
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
     func fillCell(message: Message) {
         
         self.message = message
         
-        self.messageLabel.font = UIFont.systemFont(ofSize: 17)
-        self.messageLabel.text = message.text
-        
+        messageLabel.text = message.text
+        messageContentView.backgroundColor = message.chatRole == .outgoing ? outComeColorBubble : incomeColorBubble
+        messageLabel.textColor = message.chatRole == .outgoing ? outcomeColorMessageText : incomeColorMessageText
+
 //        if message.chatRole == .mainUser {
 //            self.leftDate.isHidden = true
 //            self.rightDate.isHidden = false
@@ -44,13 +62,20 @@ class MessageCell: UICollectionViewCell {
 //            self.leftDate.text = dateFormatter.string(from: message.date!)
 //        }
         
-        installViews()
+        setupViews()
     }
     
-    private func installViews() {
-        self.messageContentView.layer.cornerRadius = 17
-        self.messageContentView.backgroundColor = message.chatRole == .outgoing ? outComeColorBubble : incomeColorBubble
-        self.messageLabel.textColor = message.chatRole == .outgoing ? outcomeColorMessageText : incomeColorMessageText
+    private func setupViews() {
+        
+        addSubview(messageContentView)
+        addSubview(messageLabel)
+        
     }
     
+}
+
+extension MessageCell {
+    override func layoutSubviews() {
+        messageContentView.layer.cornerRadius = 17
+    }
 }

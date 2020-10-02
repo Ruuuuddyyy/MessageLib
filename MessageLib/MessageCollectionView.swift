@@ -8,6 +8,6 @@
 
 import UIKit
 
-class MessageCollectionView: UICollectionView {
+final class MessageCollectionView: UICollectionView {
     
 }

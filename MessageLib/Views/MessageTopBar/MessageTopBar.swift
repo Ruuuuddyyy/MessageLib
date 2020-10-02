@@ -8,21 +8,24 @@
 
 import UIKit
 
-class MessageTopBar: UIView {
+final class MessageTopBar: UIView {
     
     private lazy var statusStackView: UIStackView = {
         let sv = UIStackView()
         sv.axis = .vertical
+        sv.translatesAutoresizingMaskIntoConstraints = false
         return sv
     }()
     
     private lazy var viewForName: UIView = {
         let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
     
     private lazy var viewForStatus: UIView = {
         let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
     
@@ -30,6 +33,7 @@ class MessageTopBar: UIView {
     lazy var backButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "backIcon"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -39,6 +43,7 @@ class MessageTopBar: UIView {
         label.font = UIFont.systemFont(ofSize: 16)
         label.textAlignment = .center
         label.text = "Артем Власенко"
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -49,6 +54,7 @@ class MessageTopBar: UIView {
         label.font = UIFont.systemFont(ofSize: 12)
         label.textAlignment = .center
         label.text = "Был(а) недавно"
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -57,82 +63,71 @@ class MessageTopBar: UIView {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.image = UIImage(named: "photo")
+        iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
+    
+    private var heightBar: CGFloat = 64
     
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        installViews()
+        setupViews()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        installViews()
+        setupViews()
     }
     
-    private func installViews() {
-
+    private func setupViews() {
+        translatesAutoresizingMaskIntoConstraints = false
+        layer.shadowOffset = CGSize(width: 0, height: 2)
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.2
+        layer.shadowRadius = 2
+        
         viewForName.addSubview(userName)
         viewForStatus.addSubview(statusConversation)
         statusStackView.addArrangedSubview(viewForName)
         statusStackView.addArrangedSubview(viewForStatus)
+        
+        addSubview(userImage)
+        addSubview(backButton)
+        addSubview(statusStackView)
+        addSubview(statusConversation)
+        
+        let height = heightBar + MessageHelper.isDeviceHaveBrow()
+        
+        let constraints = [
+        
+            userImage.centerYAnchor.constraint(equalTo: centerYAnchor),
+            userImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            userImage.heightAnchor.constraint(equalToConstant: 34),
+            userImage.widthAnchor.constraint(equalToConstant: 34),
 
-        self.layer.shadowOffset = CGSize(width: 0, height: 2)
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOpacity = 0.2
-        self.layer.shadowRadius = 2
+            backButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            backButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backButton.heightAnchor.constraint(equalToConstant: 44),
+            backButton.widthAnchor.constraint(equalToConstant: 44),
         
-        installConstraints()
-    }
-    
-    private func installConstraints() {
-        self.translatesAutoresizingMaskIntoConstraints = false
+            statusStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            statusStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+          
+            userName.leadingAnchor.constraint(equalTo: viewForName.leadingAnchor),
+            userName.trailingAnchor.constraint(equalTo: viewForName.trailingAnchor),
+            userName.bottomAnchor.constraint(equalTo: viewForName.bottomAnchor),
+            userName.topAnchor.constraint(equalTo: viewForName.topAnchor),
 
-        installAvatarConstraints()
-        installBackButtonConstraints()
-        installStackViewConstraints()
-    }
-    
-    private func installAvatarConstraints() {
-        self.addSubview(userImage)
-        
-        userImage.translatesAutoresizingMaskIntoConstraints = false
-        userImage.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        userImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
-        userImage.heightAnchor.constraint(equalToConstant: 34).isActive = true
-        userImage.widthAnchor.constraint(equalToConstant: 34).isActive = true
-    }
-    
-    private func installBackButtonConstraints() {
-        self.addSubview(backButton)
-        
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        backButton.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        backButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        backButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
-    }
-    
-    private func installStackViewConstraints() {
-        self.addSubview(statusStackView)
-        
-        statusStackView.translatesAutoresizingMaskIntoConstraints = false
-        statusStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        statusStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-      
-        userName.translatesAutoresizingMaskIntoConstraints = false
-        userName.leadingAnchor.constraint(equalTo: viewForName.leadingAnchor).isActive = true
-        userName.trailingAnchor.constraint(equalTo: viewForName.trailingAnchor).isActive = true
-        userName.bottomAnchor.constraint(equalTo: viewForName.bottomAnchor).isActive = true
-        userName.topAnchor.constraint(equalTo: viewForName.topAnchor).isActive = true
-
-        statusConversation.translatesAutoresizingMaskIntoConstraints = false
-        statusConversation.leadingAnchor.constraint(equalTo: viewForStatus.leadingAnchor).isActive = true
-        statusConversation.trailingAnchor.constraint(equalTo: viewForStatus.trailingAnchor).isActive = true
-        statusConversation.bottomAnchor.constraint(equalTo: viewForStatus.bottomAnchor).isActive = true
-        statusConversation.topAnchor.constraint(equalTo: viewForStatus.topAnchor).isActive = true
+            statusConversation.leadingAnchor.constraint(equalTo: viewForStatus.leadingAnchor),
+            statusConversation.trailingAnchor.constraint(equalTo: viewForStatus.trailingAnchor),
+            statusConversation.bottomAnchor.constraint(equalTo: viewForStatus.bottomAnchor),
+            statusConversation.topAnchor.constraint(equalTo: viewForStatus.topAnchor),
+            
+            heightAnchor.constraint(equalToConstant: height)
+        ]
+        NSLayoutConstraint.activate(constraints)
     }
     
     override func layoutSubviews() {
