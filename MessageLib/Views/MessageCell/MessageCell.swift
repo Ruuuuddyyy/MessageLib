@@ -45,7 +45,6 @@ final class MessageCell: UICollectionViewCell {
     }
     
     func fillCell(message: Message) {
-        
         self.message = message
         
         messageLabel.text = message.text
